@@ -13,14 +13,14 @@
   // ⏰ Автоотключение через 1 час
   setTimeout(() => {
     alert("⛔️ Сессия завершена. Панель отключена.");
-    const panel = document.getElementById("helpx-panel");
+    const panel = document.getElementById("ref-panel");
     if (panel) panel.remove();
   }, 60 * 60 * 1000); // 1 час
 
   // 🖱 Создание панели и привязка к мышке
   function createPanel() {
     const panel = document.createElement("div");
-    panel.id = "helpx-panel";
+    panel.id = "ref-panel";
     panel.style = `
       position: fixed;
       top: 100px;
@@ -38,7 +38,7 @@
       cursor: move;
     `;
     panel.innerHTML = `
-      <div><b>🖱 Helpx — отправка вопроса</b></div>
+      <div><b>🖱 Ref — отправка вопроса</b></div>
       <textarea id="question-box" placeholder="Вопрос..." style="width:100%; height:60px; margin-top:6px;"></textarea>
       <button id="send-question" style="margin-top:8px;">📤 Отправить</button>
     `;
@@ -48,21 +48,25 @@
     document.getElementById("send-question").onclick = async () => {
       const question = document.getElementById("question-box").value.trim();
       if (!question) return alert("❗ Введите вопрос");
-      document.getElementById("send-question").innerText = "⏳ Отправка...";
+      const btn = document.getElementById("send-question");
+      btn.innerText = "⏳ Отправка...";
+      btn.disabled = true;
       try {
-        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             chat_id: TELEGRAM_CHAT_ID,
-            text: `❓ Вопрос с Helpx:\n\n${question}`,
+            text: `❓ Вопрос с Ref:\n\n${question}`,
           }),
         });
-        document.getElementById("send-question").innerText = "✅ Отправлено!";
+        if (!res.ok) throw new Error("Telegram API Error");
+        btn.innerText = "✅ Отправлено!";
       } catch (err) {
         alert("⚠ Ошибка при отправке");
-        document.getElementById("send-question").innerText = "📤 Отправить";
+        btn.innerText = "📤 Отправить";
       }
+      btn.disabled = false;
     };
 
     // 🖱 Перетаскивание мышкой
@@ -89,7 +93,7 @@
 
   // ⌨ Ctrl+Alt для вызова панели
   document.addEventListener("keydown", function (e) {
-    if (e.ctrlKey && e.altKey && !document.getElementById("helpx-panel")) {
+    if (e.ctrlKey && e.altKey && !document.getElementById("ref-panel")) {
       createPanel();
     }
   });
