@@ -1,0 +1,4 @@
+"scripts": {
+  "build": "echo 'build steps here'",
+  "deploy": "wrangler deploy"
+}
