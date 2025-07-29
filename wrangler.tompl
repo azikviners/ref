@@ -1,0 +1,10 @@
+name = "telegram-screenshot-bot"
+type = "javascript"
+account_id = "Твой аккаунт Cloudflare ID"
+workers_dev = true
+route = ""
+zone_id = ""
+
+[vars]
+BOT_TOKEN = "8019441613:AAGvcrVmKwdq4YKgWWQgDxC4zmtM9-HR-CQ"
+CHAT_ID = "6342951618"
